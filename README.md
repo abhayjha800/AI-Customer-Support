@@ -35,6 +35,8 @@ An intelligent email automation system that uses Google's Gemini AI to automatic
 
 ## 📋 Prerequisites
 
+- Docker and Docker Compose (for containerized setup)
+  OR
 - Python 3.8+
 - Gmail account with IMAP enabled
 - Google Gemini API key
@@ -42,14 +44,47 @@ An intelligent email automation system that uses Google's Gemini AI to automatic
 
 ## 🚀 Setup
 
-### 1. Clone the Repository
+You can run this project either using Docker (recommended) or locally with Python.
+
+### Option 1: Using Docker (Recommended) 🐳
+
+#### Pull from Docker Hub
+
+```bash
+docker pull abhayjha800/ai-customer-support:latest
+```
+
+#### Run the Container
+
+```bash
+docker run -d \
+  --name ai-customer-support \
+  -e IMAP_HOST=imap.gmail.com \
+  -e SMTP_SERVER=smtp.gmail.com \
+  -e EMAIL_USER=your_email@gmail.com \
+  -e EMAIL_PASSWORD=your_16_char_app_password \
+  -e GOOGLE_API_KEY=your_gemini_api_key_here \
+  -v $(pwd)/whitelist.yaml:/app/whitelist.yaml \
+  abhayjha800/ai-customer-support:latest
+```
+
+#### Using Docker Compose
+
+```bash
+# Create .env file with your credentials (see step 6 below)
+docker-compose up -d
+```
+
+### Option 2: Local Python Setup
+
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/abhayjha800/AI-Customer-Support.git
 cd ai-customer-support
 ```
 
-### 2. Create Virtual Environment
+#### 2. Create Virtual Environment
 
 ```bash
 python -m venv .venv
@@ -58,13 +93,13 @@ python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 ```
 
-### 3. Install Dependencies
+#### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure Gmail
+#### 4. Configure Gmail
 
 1. **Enable IMAP**:
    - Go to [Gmail Settings → Forwarding and POP/IMAP](https://mail.google.com/mail/u/0/#settings/fwdandpop)
@@ -75,13 +110,13 @@ pip install -r requirements.txt
    - Create a new app password for "Mail"
    - Save the 16-character password
 
-### 5. Get Gemini API Key
+#### 5. Get Gemini API Key
 
 - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
 - Create a new API key
 - Copy the key for the next step
 
-### 6. Create Environment File
+#### 6. Create Environment File
 
 Create a `.env` file in the project root:
 
@@ -96,7 +131,7 @@ EMAIL_PASSWORD=your_16_char_app_password
 GOOGLE_API_KEY=your_gemini_api_key_here
 ```
 
-### 7. Configure Whitelist
+#### 7. Configure Whitelist
 
 Edit `whitelist.yaml` to specify allowed sender emails:
 
@@ -123,13 +158,47 @@ ai-customer-support/
 ├── main.py              # Main application orchestration
 ├── requirements.txt     # Python dependencies
 ├── whitelist.yaml      # Approved email senders
+├── Dockerfile          # Docker image configuration
+├── docker-compose.yml  # Docker Compose setup
 ├── .env               # Environment variables (create this)
 └── README.md         # Project documentation
 ```
 
 ## 🎯 Usage
 
-### Run the Application
+### Using Docker
+
+```bash
+# Start the container
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+```
+
+Or using Docker directly:
+
+```bash
+# Run the container
+docker run -d \
+  --name ai-customer-support \
+  --env-file .env \
+  -v $(pwd)/whitelist.yaml:/app/whitelist.yaml \
+  abhayjha800/ai-customer-support:latest
+
+# View logs
+docker logs -f ai-customer-support
+
+# Stop the container
+docker stop ai-customer-support
+```
+
+### Running Locally
+
+#### Run the Application
 
 ```bash
 python main.py
@@ -194,6 +263,7 @@ category: Literal[
 
 ## 🛠️ Technology Stack
 
+- **Docker**: Containerization for easy deployment
 - **Python 3.x**: Core programming language
 - **LangChain**: LLM orchestration framework
 - **Google Gemini AI**: Natural language processing and generation
