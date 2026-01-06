@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  ai-support:
+    build: .
+    image: abhayjha800/ai-customer-support
+    env_file:
+      - .env
+    restart: unless-stopped
